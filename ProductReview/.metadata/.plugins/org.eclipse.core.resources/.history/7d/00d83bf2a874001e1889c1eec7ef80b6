@@ -1,0 +1,79 @@
+package com.masai.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.Entity.Product;
+import com.masai.Entity.Review;
+import com.masai.Repository.ProductDao;
+import com.masai.Repository.ReviewDao;
+
+@Service
+public class ServiceImplimentation implements Services{
+	
+	@Autowired
+	private ProductDao pDao;
+	
+	@Autowired
+	private ReviewDao rDao;
+
+	@Override
+	public Product addProduct(Product product) {
+	    List<Review> reviews = new ArrayList<Review>();
+//	    if (product.getReviews() != null && !product.getReviews().isEmpty()) {
+//	        for (Review review : product.getReviews()) {
+//	            // Set the product for each review
+//	            review.setProduct(product);
+//	            review.setCDate(LocalDate.now());
+//	            reviews.add(review);
+//	        }
+//	    }
+	    // Set the reviews for the product
+	    product.setCDate(LocalDate.now());
+	    product.setReviews(reviews);
+	    Product savedProduct = pDao.save(product);
+	    return savedProduct;
+	}
+
+
+	@Override
+	public List<Product> getAllProduct() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product getProductById(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product updateProduct(Integer id, Product product) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Product deleteProduct(Integer id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Review createReview(Integer pId, Review review) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Review deleteReview(Integer pId, Integer rId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

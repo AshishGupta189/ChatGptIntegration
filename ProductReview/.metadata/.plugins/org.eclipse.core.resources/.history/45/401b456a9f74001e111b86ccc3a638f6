@@ -1,0 +1,20 @@
+package com.masai.Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.Entity.Product;
+import com.masai.Repository.ProductDao;
+
+@Service
+public class ServiceImplimentation {
+	
+	@Autowired
+	private ProductDao pDao;
+	
+	public Product createProduct(Product pro) {
+		return pDao.save(pro);
+		
+	}
+
+}

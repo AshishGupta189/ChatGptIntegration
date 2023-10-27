@@ -1,0 +1,140 @@
+package com.masai.Service;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.masai.DTO.ProductDTO;
+import com.masai.DTO.ReviewDTO;
+import com.masai.Entity.Product;
+import com.masai.Entity.Review;
+import com.masai.Exception.ProductException;
+import com.masai.Exception.ReviewException;
+import com.masai.Repository.ProductDao;
+import com.masai.Repository.ReviewDao;
+
+@Service
+public class ServiceImplimentation implements Services{
+	
+	@Autowired
+	private ProductDao pDao;
+	
+	@Autowired
+	private ReviewDao rDao;
+
+	@Override
+	public String addProduct(ProductDTO product) {
+	    Product pro=new Product();
+	    pro.setName(product.getName());
+	    pro.setPrice(product.getPrice());
+	    pro.setCDate(LocalDate.now());
+	    Product savedProduct = pDao.save(pro);
+	    return "Product added successfully..., product = "+savedProduct;
+	}
+
+
+	@Override
+	public List<Product> getAllProduct() throws ProductException{
+		List<Product> products = new ArrayList<Product>();
+		products=pDao.findAll();
+		if(products.size()==0) {
+			throw new ProductException("No Products found");
+		}
+		return products;
+	}
+
+	@Override
+	public Product getProductById(Integer id) throws ProductException{
+		Product product=pDao.getById(id);
+		if(product==null) {
+			throw new ProductException("No Products found");
+		}
+		Product pro=new Product(id,product.getName(), product.getPrice(), product.getCDate(), product.getUDate(), product.getReviews());
+		return pro;
+		
+	}
+
+	@Override
+	public String updateProduct(Integer id, ProductDTO product) throws ProductException{
+		Product pro=pDao.getById(id);
+		if(pro==null) {
+			throw new ProductException("No Products found");
+		}
+		if(product.getName()!=null) {
+			pro.setName(product.getName());
+		}
+		if(product.getPrice()!=0.0) {
+			pro.setPrice(product.getPrice());
+		}
+		pro.setUDate(LocalDate.now());
+		Product prod=new Product(id,pro.getName(), pro.getPrice(), pro.getCDate(), pro.getUDate(), pro.getReviews());
+		pDao.save(pro);
+		return "Product updated successfully..., product ";
+		
+	}
+
+	@Override
+	public String deleteProduct(Integer id) throws ProductException{
+		Product product=pDao.getById(id);
+		if(product==null) {
+			throw new ProductException("No Products found");
+			
+		}
+		pDao.delete(product);
+		return "Product deleted successfully..., product ";
+	}
+
+	@Override
+	public String createReview(Integer pId, ReviewDTO review) throws ProductException,ReviewException{
+		Product pro=pDao.getById(pId);
+		if(pro==null) {
+			throw new ProductException("No Products found");
+		}
+		pro.getReviews().add(review);
+		pDao.save(pro);
+		return "Review created successfully..., review = "+review;
+	}
+
+	@Override
+	public String deleteReview(Integer pId, Integer rId) throws ProductException,ReviewException{
+		Product pro=pDao.getById(pId);
+		if(pro==null) {
+			throw new ProductException("No Products found");
+		}
+		Review rev=rDao.getById(rId);
+		if(rev==null) {
+			throw new ReviewException("No Reviews found");
+		}
+		if (!pro.getReviews().contains(rev)) {
+	        throw new ReviewException("Review not associated with the product");
+	    }
+
+	    // Remove the review from the product
+	    pro.getReviews().remove(rev);
+	    pDao.save(pro); // Save the product to update the reviews association
+
+	    // Delete the review from the database
+	    rDao.delete(rev);
+
+	    return "Review deleted successfully..., review = "+rev;
+		
+	}
+
+
+	@Override
+	public List<Review> getReviewforProduct(Integer pid) throws ProductException, ReviewException {
+		Product pro=pDao.getById(pid);
+		if(pro==null) {
+			throw new ProductException("No Products found");
+		}
+		List<Review> reviews=pro.getReviews();
+		if(reviews.size()==0) {
+			throw new ReviewException("No reviews found");
+		}
+		return reviews;
+	}
+
+}

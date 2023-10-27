@@ -1,0 +1,19 @@
+package com.masai.Service;
+
+import java.util.List;
+
+import com.masai.Entity.Product;
+import com.masai.Entity.Review;
+
+public interface Services {
+	
+	public Product addProduct(Product product);
+	public List<Product> getAllProduct();
+	public Product getProductById(Integer id);
+	public Product updateProduct(Integer id,Product product);
+	public Product deleteProduct(Integer id);
+	public Review createReview(Integer pId,Review review);
+	public Review deleteReview(Integer pId,Integer rId);
+	
+
+}

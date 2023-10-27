@@ -1,0 +1,31 @@
+package com.masai.Controller;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masai.Entity.Product;
+import com.masai.Entity.Review;
+import com.masai.Service.ServiceImplimentation;
+
+@RestController
+public class ProductController {
+
+	@Autowired
+	private ServiceImplimentation simpl;
+	
+	@PostMapping("/product")
+	public ResponseEntity<Product> createProductHandler(@RequestBody Product product) {
+		
+		
+		Product	result =simpl.addProduct(product);
+		return new ResponseEntity<Product>(result,HttpStatus.OK );
+		}
+	}
